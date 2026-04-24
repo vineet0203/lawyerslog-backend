@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { createCase, getCases, getCaseById, assignLawyer, updateCaseStatus } = require('./case.controller');
 const { protect } = require('../../middleware/auth');
-const { allowRoles } = require('../../middleware/roleCheck');
-router.use(protect);
-router.post('/', allowRoles('claimant'), createCase);
-router.get('/', getCases);
-router.get('/:id', getCaseById);
-router.patch('/:id/assign-lawyer', allowRoles('lawyer'), assignLawyer);
-router.patch('/:id/status', allowRoles('lawyer', 'insurance'), updateCaseStatus);
+
+router.post('/', protect, createCase);
+router.get('/', protect, getCases);
+router.get('/:id', protect, getCaseById);
+router.patch('/:id/assign-lawyer', protect, assignLawyer);
+router.patch('/:id/status', protect, updateCaseStatus);
+
 module.exports = router;

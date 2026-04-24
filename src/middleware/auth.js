@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
-const User = require('../modules/auth/userModel');
-const protect = async (req, res, next) => {
+
+const protect = (req, res, next) => {
+  console.log('=== PROTECT CALLED ===');
+  console.log('next type:', typeof next);
+  console.log('next name:', next?.name);
   try {
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -8,11 +11,13 @@ const protect = async (req, res, next) => {
     }
     if (!token) return res.status(401).json({ success: false, message: 'Not authorized. Token missing.' });
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id);
-    if (!req.user) return res.status(401).json({ success: false, message: 'User not found' });
-    next();
+    req.user = { _id: decoded.id, role: decoded.role };
+    console.log('=== CALLING NEXT ===');
+    return next();
   } catch (error) {
+    console.log('=== PROTECT ERROR ===', error.message);
     return res.status(401).json({ success: false, message: 'Token invalid or expired' });
   }
 };
+
 module.exports = { protect };
