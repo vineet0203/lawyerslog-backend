@@ -3,7 +3,7 @@ const router = express.Router();
 const { createCase, getCases, getCaseById, updateCase, deleteCase, assignLawyer, updateCaseStatus } = require('./case.controller');
 const { protect } = require('../../middleware/auth');
 const upload = require('../../middleware/upload');
-const allowRoles = require('../../middleware/roleCheck');
+const { allowRoles } = require('../../middleware/roleCheck');
 
 router.use(protect);
 
